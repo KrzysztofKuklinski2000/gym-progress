@@ -8,6 +8,8 @@ const summaryElement = document.querySelector('[data-workout-summary]');
 
 const workoutSets = [];
 
+renderWorkout(workoutSets);
+
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -26,14 +28,9 @@ form.addEventListener('submit', (event) => {
     };
 
     workoutSets.push(exerciseSet);
-    const volume = calculateVolume(weight, reps);
-    summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objęctość: ${calculateTotalVolume(workoutSets)} kg`
+    renderWorkout(workoutSets);
 
-    const li = document.createElement('li');
-    li.textContent = `${name} - ${weight} kg x ${reps} - objętość: ${volume} kg`
-    list.append(li);
 
-    emptyListMessage.remove();
 })
 function calculateVolume(weight, reps) {
     return weight * reps;
@@ -44,7 +41,22 @@ function calculateTotalVolume(workoutSets) {
 
     workoutSets.forEach(set => {
         volume += calculateVolume(set.weight, set.reps);
-    })
+    });
 
     return volume;
+}
+
+function renderWorkout(workoutSets) {
+    list.replaceChildren();
+    summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objętość: ${calculateTotalVolume(workoutSets)} kg`
+
+    workoutSets.forEach(set => {
+        const volume = calculateVolume(set.weight, set.reps);
+
+        const li = document.createElement('li');
+        li.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`
+        list.append(li);
+    });
+
+    emptyListMessage.hidden = workoutSets.length > 0;
 }
