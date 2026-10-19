@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gym-progress</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Dziennik treningowy</h1>
+      <section>
+        <h2>Aktualny trening</h2>
+        <form action="">
+          <div>
+            <label for="name">Nazwa ćwiczenia</label>
+            <input id="name" type="text" required>
+          </div>
+          <div>
+            <label for="weight">Ciężar w kilogramach</label>
+            <input id="weight" type="number" step="0.5" min="0" required>
+          </div>
+          <div>
+            <label for="reps">Liczba powtórzeń</label>
+            <input id='reps' type="number" step="1" min="0" required>
+          </div>
+          <button>Dodaj serię</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Zapisane serie</h2>
+        <p>Nie dodano jeszcze żadnej serii</p>
+      </section>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
