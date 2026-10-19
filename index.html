@@ -2,36 +2,62 @@
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>gym-progress</title>
+    <meta name="theme-color" content="#2456c4" />
+    <title>Dziennik treningowy | Gym Progress</title>
   </head>
   <body>
-    <div id="app">
-      <h1>Dziennik treningowy</h1>
-      <section>
-        <h2>Aktualny trening</h2>
-        <form action="">
-          <div>
-            <label for="name">Nazwa ćwiczenia</label>
-            <input id="name" type="text" required>
-          </div>
-          <div>
-            <label for="weight">Ciężar w kilogramach</label>
-            <input id="weight" type="number" step="0.5" min="0" required>
-          </div>
-          <div>
-            <label for="reps">Liczba powtórzeń</label>
-            <input id='reps' type="number" step="1" min="0" required>
-          </div>
-          <button>Dodaj serię</button>
-        </form>
-      </section>
+    <div id="app" class="app">
+      <header class="app-header">
+        <a class="brand" href="./" aria-label="Gym Progress — strona główna">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M4 12v8m5-12v16m14-16v16m5-12v8M9 16h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          <span>Gym Progress</span>
+        </a>
+        <span class="header-note">Twój trening. Twój progres.</span>
+      </header>
 
-      <section>
-        <h2>Zapisane serie</h2>
-        <p>Nie dodano jeszcze żadnej serii</p>
-      </section>
+      <main>
+        <div class="page-heading">
+          <h1>Dziennik treningowy</h1>
+          <p>Zapisuj serie i buduj swój progres trening po treningu.</p>
+        </div>
+
+        <section class="workout-section" aria-labelledby="workout-heading">
+          <div class="section-heading">
+            <h2 id="workout-heading">Aktualny trening</h2>
+            <p>Dodaj kolejną wykonaną serię.</p>
+          </div>
+          <form class="workout-form" data-workout-form>
+            <div class="form-field exercise-field">
+              <label for="name">Nazwa ćwiczenia</label>
+              <input id="name" name="name" type="text" placeholder="np. Wyciskanie sztangi" required>
+            </div>
+            <div class="form-field">
+              <label for="weight">Ciężar <span class="label-unit">(kg)</span></label>
+              <input id="weight" name="weight" type="number" step="0.5" min="0" placeholder="40" required>
+            </div>
+            <div class="form-field">
+              <label for="reps">Powtórzenia</label>
+              <input id="reps" name="reps" type="number" step="1" min="1" placeholder="8" required>
+            </div>
+            <button class="submit-button" type="submit" name="btn-add"><span aria-hidden="true">+</span> Dodaj serię</button>
+          </form>
+        </section>
+
+        <section class="sets-section" aria-labelledby="sets-heading">
+          <div class="section-heading">
+            <h2 id="sets-heading">Zapisane serie</h2>
+            <p>Ćwiczenie, ciężar, powtórzenia i objętość każdej serii.</p>
+          </div>
+          <ul class="sets-list" data-sets-list></ul>
+          <div class="empty-state" data-empty-list-message>
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="12" y="10" width="25" height="31" rx="4" stroke="currentColor" stroke-width="2"/><rect x="19" y="6" width="11" height="8" rx="2" fill="currentColor"/><path d="M19 23h11m-11 7h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <p class="empty-title">Tutaj zaczyna się Twój trening</p>
+            <p>Dodaj pierwszą serię za pomocą formularza powyżej.</p>
+          </div>
+        </section>
+      </main>
+      <footer class="app-footer">Na razie serie są przechowywane tylko do odświeżenia strony.</footer>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
