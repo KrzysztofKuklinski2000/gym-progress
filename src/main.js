@@ -4,6 +4,9 @@ import './style.css'
 const form = document.querySelector('[data-workout-form]');
 const list = document.querySelector('[data-sets-list]');
 const emptyListMessage = document.querySelector('[data-empty-list-message]')
+const summaryElement = document.querySelector('[data-workout-summary]');
+
+const workoutSets = [];
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -16,8 +19,15 @@ form.addEventListener('submit', (event) => {
         return;
     }
 
-    const volume = calculateVolume(weight, reps);
+    const exerciseSet = {
+        exercise: name,
+        weight,
+        reps
+    };
 
+    workoutSets.push(exerciseSet);
+    const volume = calculateVolume(weight, reps);
+    summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objęctość: ${calculateTotalVolume(workoutSets)} kg`
 
     const li = document.createElement('li');
     li.textContent = `${name} - ${weight} kg x ${reps} - objętość: ${volume} kg`
@@ -27,4 +37,14 @@ form.addEventListener('submit', (event) => {
 })
 function calculateVolume(weight, reps) {
     return weight * reps;
+}
+
+function calculateTotalVolume(workoutSets) {
+    let volume = 0;
+
+    workoutSets.forEach(set => {
+        volume += calculateVolume(set.weight, set.reps);
+    })
+
+    return volume;
 }
