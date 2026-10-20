@@ -5,10 +5,15 @@ const form = document.querySelector('[data-workout-form]');
 const list = document.querySelector('[data-sets-list]');
 const emptyListMessage = document.querySelector('[data-empty-list-message]')
 const summaryElement = document.querySelector('[data-workout-summary]');
+const cancelButton = form.querySelector('[data-cancel-edit]');
+const submitLabel = form.querySelector('[data-submit-label]');
 
 let workoutSets = [];
+let editingSetId  = null;
 
 renderWorkout(workoutSets);
+
+cancelButton.addEventListener('click', resetForm);
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -20,17 +25,32 @@ form.addEventListener('submit', (event) => {
     if(!name || !Number.isFinite(weight) || !Number.isFinite(reps)) {
         return;
     }
+    if(editingSetId === null) {
+        const exerciseSet = {
+            id: crypto.randomUUID(),
+            exercise: name,
+            weight,
+            reps
+        };
 
-    const exerciseSet = {
-        id: crypto.randomUUID(),
-        exercise: name,
-        weight,
-        reps
-    };
+        workoutSets.push(exerciseSet);
+    }else {
+        workoutSets = workoutSets.map(set => {
+            if(set.id === editingSetId) {
+                return {
+                    id: editingSetId,
+                    exercise: name,
+                    weight,
+                    reps
+                }
+            }else {
+                return set;
+            }
+        })
+    }
 
-    workoutSets.push(exerciseSet);
     renderWorkout(workoutSets);
-
+    resetForm();
 
 })
 function calculateVolume(weight, reps) {
@@ -55,14 +75,21 @@ function renderWorkout(workoutSets) {
         const volume = calculateVolume(set.weight, set.reps);
 
         const li = document.createElement('li');
-        const button = document.createElement('button');
+        const removeButton = document.createElement('button');
+        const editButton = document.createElement('button')
 
-        button.type = 'button';
-        button.textContent = 'Usuń';
-        button.setAttribute('data-remove-set', set.id);
+        removeButton.type = 'button';
+        removeButton.textContent = 'Usuń';
+        removeButton.setAttribute('data-remove-set', set.id);
+
+
+        editButton.type = 'button';
+        editButton.textContent = 'Edytuj';
+        editButton.setAttribute('data-edit-set', set.id);
 
         li.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`
-        li.append(button);
+        li.append(removeButton);
+        li.append(editButton);
 
         list.append(li);
     });
@@ -72,11 +99,39 @@ function renderWorkout(workoutSets) {
 
 list.addEventListener('click', (event) => {
     const removeButton = event.target.closest('[data-remove-set]');
+    const editButton = event.target.closest('[data-edit-set]');
 
-    if(!removeButton) return;
+    if(removeButton) {
+        const attributeValue = removeButton.getAttribute('data-remove-set');
+        workoutSets = workoutSets.filter(set => set.id !== attributeValue);
 
-    const attributeValue = removeButton.getAttribute('data-remove-set');
+        if (attributeValue === editingSetId) {
+            resetForm();
+        }
+    }
 
-    workoutSets = workoutSets.filter(set => set.id !== attributeValue);
+    if(editButton) {
+        editingSetId = editButton.getAttribute('data-edit-set');
+        const editingSet = workoutSets.find(set => set.id === editingSetId);
+
+        form.elements.namedItem('name').value = editingSet.exercise;
+        form.elements.namedItem('weight').value = editingSet.weight;
+        form.elements.namedItem('reps').value = editingSet.reps;
+
+
+        submitLabel.textContent = 'Zapisz zmiany';
+        cancelButton.hidden = false;
+    }
+
+
+
     renderWorkout(workoutSets);
 })
+
+function resetForm() {
+    editingSetId = null;
+    form.reset();
+
+    submitLabel.textContent = 'Dodaj serię';
+    cancelButton.hidden = true;
+}
