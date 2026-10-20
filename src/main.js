@@ -6,7 +6,7 @@ const list = document.querySelector('[data-sets-list]');
 const emptyListMessage = document.querySelector('[data-empty-list-message]')
 const summaryElement = document.querySelector('[data-workout-summary]');
 
-const workoutSets = [];
+let workoutSets = [];
 
 renderWorkout(workoutSets);
 
@@ -22,6 +22,7 @@ form.addEventListener('submit', (event) => {
     }
 
     const exerciseSet = {
+        id: crypto.randomUUID(),
         exercise: name,
         weight,
         reps
@@ -54,9 +55,28 @@ function renderWorkout(workoutSets) {
         const volume = calculateVolume(set.weight, set.reps);
 
         const li = document.createElement('li');
+        const button = document.createElement('button');
+
+        button.type = 'button';
+        button.textContent = 'Usuń';
+        button.setAttribute('data-remove-set', set.id);
+
         li.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`
+        li.append(button);
+
         list.append(li);
     });
 
     emptyListMessage.hidden = workoutSets.length > 0;
 }
+
+list.addEventListener('click', (event) => {
+    const removeButton = event.target.closest('[data-remove-set]');
+
+    if(!removeButton) return;
+
+    const attributeValue = removeButton.getAttribute('data-remove-set');
+
+    workoutSets = workoutSets.filter(set => set.id !== attributeValue);
+    renderWorkout(workoutSets);
+})
