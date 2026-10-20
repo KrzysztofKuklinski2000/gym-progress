@@ -87,9 +87,16 @@ function renderWorkout(workoutSets) {
         editButton.textContent = 'Edytuj';
         editButton.setAttribute('data-edit-set', set.id);
 
-        li.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`
-        li.append(removeButton);
-        li.append(editButton);
+        const description = document.createElement('span');
+        description.className = 'set-description';
+        description.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`;
+
+        const actions = document.createElement('div');
+        actions.className = 'set-actions';
+        editButton.className = 'set-button set-button-edit';
+        removeButton.className = 'set-button set-button-remove';
+        actions.append(editButton, removeButton);
+        li.append(description, actions);
 
         list.append(li);
     });

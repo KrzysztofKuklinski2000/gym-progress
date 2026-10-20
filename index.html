@@ -40,14 +40,16 @@
               <label for="reps">Powtórzenia</label>
               <input id="reps" name="reps" type="number" step="1" min="1" placeholder="8" required>
             </div>
+            <div class="form-actions">
             <button class="submit-button" type="submit" name="btn-add">
               <span aria-hidden="true">+</span>
               <span data-submit-label>Dodaj serię</span>
             </button>
 
-            <button type="button" data-cancel-edit hidden>
+            <button class="cancel-button" type="button" data-cancel-edit hidden>
               Anuluj edycję
             </button>
+            </div>
           </form>
         </section>
 
@@ -72,3 +74,4 @@
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
+
