@@ -9,41 +9,36 @@ const cancelButton = form.querySelector('[data-cancel-edit]');
 const submitLabel = form.querySelector('[data-submit-label]');
 
 let workoutSets = [];
-let editingSetId  = null;
+let editingSetId = null;
 
-renderWorkout(workoutSets);
-
-cancelButton.addEventListener('click', resetForm);
-
-form.addEventListener('submit', (event) => {
+function handleFormSubmit(event) {
     event.preventDefault();
 
-    const name = form.elements.namedItem('name').value.trim();
-    const weight = form.elements.namedItem('weight').valueAsNumber;
-    const reps = form.elements.namedItem('reps').valueAsNumber;
+    const {exercise, weight, reps} = readFormValues();
 
-    if(!name || !Number.isFinite(weight) || !Number.isFinite(reps)) {
+    if (!exercise || !Number.isFinite(weight) || !Number.isFinite(reps)) {
         return;
     }
-    if(editingSetId === null) {
+
+    if (editingSetId === null) {
         const exerciseSet = {
             id: crypto.randomUUID(),
-            exercise: name,
+            exercise,
             weight,
             reps
         };
 
         workoutSets.push(exerciseSet);
-    }else {
+    } else {
         workoutSets = workoutSets.map(set => {
-            if(set.id === editingSetId) {
+            if (set.id === editingSetId) {
                 return {
                     id: editingSetId,
-                    exercise: name,
+                    exercise,
                     weight,
                     reps
                 }
-            }else {
+            } else {
                 return set;
             }
         })
@@ -51,76 +46,59 @@ form.addEventListener('submit', (event) => {
 
     renderWorkout(workoutSets);
     resetForm();
-
-})
-
-function renderWorkout(workoutSets) {
-    list.replaceChildren();
-    summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objętość: ${calculateTotalVolume(workoutSets)} kg`
-
-    workoutSets.forEach(set => {
-        const volume = calculateVolume(set.weight, set.reps);
-
-        const li = document.createElement('li');
-        const removeButton = document.createElement('button');
-        const editButton = document.createElement('button')
-
-        removeButton.type = 'button';
-        removeButton.textContent = 'Usuń';
-        removeButton.setAttribute('data-remove-set', set.id);
-
-
-        editButton.type = 'button';
-        editButton.textContent = 'Edytuj';
-        editButton.setAttribute('data-edit-set', set.id);
-
-        const description = document.createElement('span');
-        description.className = 'set-description';
-        description.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`;
-
-        const actions = document.createElement('div');
-        actions.className = 'set-actions';
-        editButton.className = 'set-button set-button-edit';
-        removeButton.className = 'set-button set-button-remove';
-        actions.append(editButton, removeButton);
-        li.append(description, actions);
-
-        list.append(li);
-    });
-
-    emptyListMessage.hidden = workoutSets.length > 0;
 }
 
-list.addEventListener('click', (event) => {
+function handleListClick(event) {
     const removeButton = event.target.closest('[data-remove-set]');
     const editButton = event.target.closest('[data-edit-set]');
 
-    if(removeButton) {
-        const attributeValue = removeButton.getAttribute('data-remove-set');
-        workoutSets = workoutSets.filter(set => set.id !== attributeValue);
-
-        if (attributeValue === editingSetId) {
-            resetForm();
-        }
+    if (removeButton) {
+        removeSet(removeButton.dataset.removeSet);
+        return;
     }
 
-    if(editButton) {
-        editingSetId = editButton.getAttribute('data-edit-set');
-        const editingSet = workoutSets.find(set => set.id === editingSetId);
-
-        form.elements.namedItem('name').value = editingSet.exercise;
-        form.elements.namedItem('weight').value = editingSet.weight;
-        form.elements.namedItem('reps').value = editingSet.reps;
-
-
-        submitLabel.textContent = 'Zapisz zmiany';
-        cancelButton.hidden = false;
+    if (editButton) {
+        startEditingSet(editButton.dataset.editSet);
     }
 
+}
 
+function startEditingSet(id) {
+    const editingSet = workoutSets.find(set => set.id === id);
+
+    if (!editingSet) return;
+
+    editingSetId = id;
+
+    form.elements.namedItem('name').value = editingSet.exercise;
+    form.elements.namedItem('weight').value = editingSet.weight;
+    form.elements.namedItem('reps').value = editingSet.reps;
+
+
+
+    submitLabel.textContent = 'Zapisz zmiany';
+    cancelButton.hidden = false;
+    form.elements.namedItem('name').focus();
+}
+
+function removeSet(id) {
+    workoutSets = workoutSets.filter(set => set.id !== id);
+
+    if (id === editingSetId) {
+        resetForm();
+    }
 
     renderWorkout(workoutSets);
-})
+}
+
+function readFormValues() {
+    const exercise = form.elements.namedItem('name').value.trim();
+    const weight = form.elements.namedItem('weight').valueAsNumber;
+    const reps = form.elements.namedItem('reps').valueAsNumber;
+
+    return {exercise, weight, reps};
+}
+
 
 function resetForm() {
     editingSetId = null;
@@ -129,3 +107,52 @@ function resetForm() {
     submitLabel.textContent = 'Dodaj serię';
     cancelButton.hidden = true;
 }
+
+
+function renderWorkout(workoutSets) {
+    list.replaceChildren();
+    summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objętość: ${calculateTotalVolume(workoutSets)} kg`
+
+    workoutSets.forEach(set => {
+        list.append(createSetElement(set));
+    });
+
+    emptyListMessage.hidden = workoutSets.length > 0;
+}
+
+function createSetElement(set) {
+    const volume = calculateVolume(set.weight, set.reps);
+
+    const li = document.createElement('li');
+    const removeButton = document.createElement('button');
+    const editButton = document.createElement('button')
+
+    const description = document.createElement('span');
+    description.className = 'set-description';
+    description.textContent = `${set.exercise} - ${set.weight} kg x ${set.reps} - objętość: ${volume} kg`;
+
+    removeButton.type = 'button';
+    removeButton.textContent = 'Usuń';
+    removeButton.setAttribute('data-remove-set', set.id);
+
+
+    editButton.type = 'button';
+    editButton.textContent = 'Edytuj';
+    editButton.setAttribute('data-edit-set', set.id);
+
+    const actions = document.createElement('div');
+    actions.className = 'set-actions';
+    editButton.className = 'set-button set-button-edit';
+    removeButton.className = 'set-button set-button-remove';
+    actions.append(editButton, removeButton);
+    li.append(description, actions);
+
+    return li;
+
+}
+
+
+form.addEventListener('submit', handleFormSubmit);
+list.addEventListener('click', handleListClick);
+cancelButton.addEventListener('click', resetForm);
+renderWorkout(workoutSets);
