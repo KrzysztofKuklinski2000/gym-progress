@@ -1,5 +1,5 @@
 import './style.css'
-
+import {calculateVolume, calculateTotalVolume} from "./workout.js";
 
 const form = document.querySelector('[data-workout-form]');
 const list = document.querySelector('[data-sets-list]');
@@ -53,19 +53,6 @@ form.addEventListener('submit', (event) => {
     resetForm();
 
 })
-function calculateVolume(weight, reps) {
-    return weight * reps;
-}
-
-function calculateTotalVolume(workoutSets) {
-    let volume = 0;
-
-    workoutSets.forEach(set => {
-        volume += calculateVolume(set.weight, set.reps);
-    });
-
-    return volume;
-}
 
 function renderWorkout(workoutSets) {
     list.replaceChildren();
