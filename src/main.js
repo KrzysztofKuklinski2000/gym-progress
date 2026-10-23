@@ -1,6 +1,6 @@
 import './style.css'
 import {calculateVolume, calculateTotalVolume} from "./workout.js";
-import {saveWorkout} from "./storage.js";
+import {saveWorkout, loadWorkout} from "./storage.js";
 
 const form = document.querySelector('[data-workout-form]');
 const list = document.querySelector('[data-sets-list]');
@@ -9,8 +9,9 @@ const summaryElement = document.querySelector('[data-workout-summary]');
 const cancelButton = form.querySelector('[data-cancel-edit]');
 const submitLabel = form.querySelector('[data-submit-label]');
 
-let workoutSets = [];
+let workoutSets = loadWorkout() ?? [];
 let editingSetId = null;
+
 
 function handleFormSubmit(event) {
     event.preventDefault();
