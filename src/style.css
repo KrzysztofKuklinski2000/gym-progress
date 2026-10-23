@@ -89,3 +89,17 @@ input:hover { border-color: #647b9b; }
   .set-actions { grid-column: 2; }
   .set-button { padding-inline: 18px; }
 }
+
+.storage-message {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border: 1px solid #e3b9bf;
+  border-left: 4px solid #a12632;
+  border-radius: 6px;
+  background: #fff3f4;
+  color: #85212d;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}

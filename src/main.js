@@ -8,8 +8,9 @@ const emptyListMessage = document.querySelector('[data-empty-list-message]')
 const summaryElement = document.querySelector('[data-workout-summary]');
 const cancelButton = form.querySelector('[data-cancel-edit]');
 const submitLabel = form.querySelector('[data-submit-label]');
+const storageMessage = document.querySelector('[data-storage-message]');
 
-let workoutSets = loadWorkout() ?? [];
+let workoutSets = loadWorkout();
 let editingSetId = null;
 
 
@@ -48,7 +49,7 @@ function handleFormSubmit(event) {
 
     renderWorkout(workoutSets);
     resetForm();
-    saveWorkout(workoutSets);
+    persistWorkout(workoutSets);
 }
 
 function handleListClick(event) {
@@ -92,7 +93,7 @@ function removeSet(id) {
     }
 
     renderWorkout(workoutSets);
-    saveWorkout(workoutSets)
+    persistWorkout(workoutSets)
 }
 
 function readFormValues() {
@@ -154,6 +155,20 @@ function createSetElement(set) {
     return li;
 
 }
+
+function persistWorkout(sets) {
+    const saved = saveWorkout(sets);
+
+    if(!saved){
+        storageMessage.hidden = false;
+        storageMessage.textContent = 'Nie udało się zapisać treningu. Zmiany mogą zniknąć po odświeżeniu strony.'
+
+    }else {
+        storageMessage.hidden = true;
+    }
+}
+
+
 
 
 form.addEventListener('submit', handleFormSubmit);
