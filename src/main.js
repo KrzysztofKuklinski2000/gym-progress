@@ -9,6 +9,8 @@ const summaryElement = document.querySelector('[data-workout-summary]');
 const cancelButton = form.querySelector('[data-cancel-edit]');
 const submitLabel = form.querySelector('[data-submit-label]');
 const storageMessage = document.querySelector('[data-storage-message]');
+const exerciseSearch = document.querySelector('[data-exercise-search]');
+const noSetDataMessage = document.querySelector('[data-no-results]')
 
 let workoutSets = loadWorkout();
 let editingSetId = null;
@@ -115,14 +117,21 @@ function resetForm() {
 
 
 function renderWorkout(workoutSets) {
+    const phrase = exerciseSearch.value.trim().toLowerCase();
+
+    const visibleSets = workoutSets.filter(set => set.exercise.toLowerCase().includes(phrase));
+
     list.replaceChildren();
     summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objętość: ${calculateTotalVolume(workoutSets)} kg`
 
-    workoutSets.forEach(set => {
+    visibleSets.forEach(set => {
         list.append(createSetElement(set));
     });
 
     emptyListMessage.hidden = workoutSets.length > 0;
+    noSetDataMessage.hidden =
+        workoutSets.length === 0 || visibleSets.length > 0;
+
 }
 
 function createSetElement(set) {
@@ -174,4 +183,7 @@ function persistWorkout(sets) {
 form.addEventListener('submit', handleFormSubmit);
 list.addEventListener('click', handleListClick);
 cancelButton.addEventListener('click', resetForm);
+exerciseSearch.addEventListener('input', () => {
+    renderWorkout(workoutSets);
+})
 renderWorkout(workoutSets);
