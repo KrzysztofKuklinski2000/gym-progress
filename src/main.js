@@ -1,5 +1,6 @@
 import './style.css'
 import {calculateVolume, calculateTotalVolume} from "./workout.js";
+import {saveWorkout} from "./storage.js";
 
 const form = document.querySelector('[data-workout-form]');
 const list = document.querySelector('[data-sets-list]');
@@ -46,6 +47,7 @@ function handleFormSubmit(event) {
 
     renderWorkout(workoutSets);
     resetForm();
+    saveWorkout(workoutSets);
 }
 
 function handleListClick(event) {
@@ -89,6 +91,7 @@ function removeSet(id) {
     }
 
     renderWorkout(workoutSets);
+    saveWorkout(workoutSets)
 }
 
 function readFormValues() {
