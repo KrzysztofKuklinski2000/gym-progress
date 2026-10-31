@@ -1,5 +1,5 @@
 import './style.css'
-import {calculateVolume, calculateTotalVolume} from "./workout.js";
+import {calculateVolume, calculateTotalVolume, sortSets} from "./workout.js";
 import {saveWorkout, loadWorkout} from "./storage.js";
 
 const form = document.querySelector('[data-workout-form]');
@@ -11,6 +11,7 @@ const submitLabel = form.querySelector('[data-submit-label]');
 const storageMessage = document.querySelector('[data-storage-message]');
 const exerciseSearch = document.querySelector('[data-exercise-search]');
 const noSetDataMessage = document.querySelector('[data-no-results]')
+const sortSelect = document.querySelector('[data-sets-sort]');
 
 let workoutSets = loadWorkout();
 let editingSetId = null;
@@ -121,10 +122,12 @@ function renderWorkout(workoutSets) {
 
     const visibleSets = workoutSets.filter(set => set.exercise.toLowerCase().includes(phrase));
 
+    const sortedSets = sortSets(visibleSets, sortSelect.value);
+
     list.replaceChildren();
     summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objętość: ${calculateTotalVolume(workoutSets)} kg`
 
-    visibleSets.forEach(set => {
+    sortedSets.forEach(set => {
         list.append(createSetElement(set));
     });
 
@@ -180,10 +183,17 @@ function persistWorkout(sets) {
 
 
 
+
+
 form.addEventListener('submit', handleFormSubmit);
 list.addEventListener('click', handleListClick);
 cancelButton.addEventListener('click', resetForm);
 exerciseSearch.addEventListener('input', () => {
     renderWorkout(workoutSets);
 })
+
+sortSelect.addEventListener('change', () => {
+    renderWorkout(workoutSets)
+});
+
 renderWorkout(workoutSets);
