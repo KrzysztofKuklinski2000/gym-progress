@@ -31,7 +31,6 @@ export function sortSets(sets, sortBy) {
 }
 
 export function groupSetsByExercise(sets) {
-    console.log(sets);
     const groupedSets = Object.groupBy(sets, set => set.exercise.trim().toLowerCase());
 
     for (const exerciseName of Object.keys(groupedSets)) {

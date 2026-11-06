@@ -82,6 +82,17 @@
             </select>
           </div>
           <ul class="sets-list" data-sets-list></ul>
+          <template id="exercise-group-template">
+            <li class="exercise-group">
+              <details class="exercise-group__details">
+                <summary class="exercise-group__summary">
+                  <span class="exercise-group__name" data-exercise-name></span>
+                  <span class="exercise-group__stats" data-exercise-stats></span>
+                </summary>
+                <ul class="exercise-group__sets" data-exercise-sets></ul>
+              </details>
+            </li>
+          </template>
           <div class="empty-state" data-empty-list-message>
             <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="12" y="10" width="25" height="31" rx="4" stroke="currentColor" stroke-width="2"/><rect x="19" y="6" width="11" height="8" rx="2" fill="currentColor"/><path d="M19 23h11m-11 7h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             <p class="empty-title">Tutaj zaczyna się Twój trening</p>

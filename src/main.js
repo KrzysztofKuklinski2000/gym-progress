@@ -12,10 +12,10 @@ const storageMessage = document.querySelector('[data-storage-message]');
 const exerciseSearch = document.querySelector('[data-exercise-search]');
 const noSetDataMessage = document.querySelector('[data-no-results]')
 const sortSelect = document.querySelector('[data-sets-sort]');
+const exerciseGroupTemplate = document.querySelector('#exercise-group-template');
 
 let workoutSets = loadWorkout();
 let editingSetId = null;
-console.log(groupSetsByExercise(workoutSets))
 
 function handleFormSubmit(event) {
     event.preventDefault();
@@ -118,23 +118,44 @@ function resetForm() {
 
 
 function renderWorkout(workoutSets) {
+
     const phrase = exerciseSearch.value.trim().toLowerCase();
 
     const visibleSets = workoutSets.filter(set => set.exercise.toLowerCase().includes(phrase));
 
     const sortedSets = sortSets(visibleSets, sortSelect.value);
 
+    const groupedSets = groupSetsByExercise(sortedSets);
+
     list.replaceChildren();
     summaryElement.textContent = `Serie: ${workoutSets.length} - Łączna objętość: ${calculateTotalVolume(workoutSets)} kg`
 
-    sortedSets.forEach(set => {
-        list.append(createSetElement(set));
+    groupedSets.forEach(group => {
+        list.append(createExerciseGroupElement(group));
     });
 
     emptyListMessage.hidden = workoutSets.length > 0;
     noSetDataMessage.hidden =
         workoutSets.length === 0 || visibleSets.length > 0;
 
+}
+
+function createExerciseGroupElement(group) {
+    const row = exerciseGroupTemplate.content.firstElementChild.cloneNode(true);
+
+    const nameElement = row.querySelector('[data-exercise-name]');
+    const statsElement = row.querySelector('[data-exercise-stats]');
+    const setsElement = row.querySelector('[data-exercise-sets]');
+
+    nameElement.textContent = group.exercise;
+    statsElement.textContent =
+        `Serie: ${group.sets.length}, powtórzenia: ${group.totalReps}, objętość: ${group.totalVolume} kg`;
+
+    group.sets.forEach(set => {
+        setsElement.append(createSetElement(set));
+    })
+
+    return row
 }
 
 function createSetElement(set) {
