@@ -1,5 +1,5 @@
 import './style.css'
-import {calculateVolume, calculateTotalVolume, sortSets} from "./workout.js";
+import {calculateVolume, calculateTotalVolume, sortSets, groupSetsByExercise} from "./workout.js";
 import {saveWorkout, loadWorkout} from "./storage.js";
 
 const form = document.querySelector('[data-workout-form]');
@@ -15,7 +15,7 @@ const sortSelect = document.querySelector('[data-sets-sort]');
 
 let workoutSets = loadWorkout();
 let editingSetId = null;
-
+console.log(groupSetsByExercise(workoutSets))
 
 function handleFormSubmit(event) {
     event.preventDefault();

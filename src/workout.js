@@ -29,3 +29,21 @@ export function sortSets(sets, sortBy) {
 
     return sortedSets;
 }
+
+export function groupSetsByExercise(sets) {
+    console.log(sets);
+    const groupedSets = Object.groupBy(sets, set => set.exercise.trim().toLowerCase());
+
+    for (const exerciseName of Object.keys(groupedSets)) {
+        const groupedExercisesByName = groupedSets[exerciseName];
+
+        groupedSets[exerciseName] = {
+            exercise: groupedExercisesByName[0].exercise.trim(),
+            sets: groupedExercisesByName,
+            totalReps: groupedExercisesByName.reduce((sum, set) => sum + set.reps, 0),
+            totalVolume: calculateTotalVolume(groupedExercisesByName)
+        }
+    }
+
+    return Object.values(groupedSets)
+}
