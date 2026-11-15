@@ -104,8 +104,18 @@ input:hover, select:hover { border-color: #647b9b; }
   overflow-wrap: anywhere;
 }
 
-.form-field:has([data-exercise-search]) {
-  margin-top: 24px;
+.sets-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(13rem, 1fr);
+  align-items: end;
+  gap: 12px 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 560px) {
+  .sets-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .no-data-message {
@@ -121,10 +131,6 @@ input:hover, select:hover { border-color: #647b9b; }
   overflow-wrap: anywhere;
 }
 
-
-.form-field:has([data-sets-sort]) {
-  margin-top: 16px;
-}
 
 select {
   cursor: pointer;

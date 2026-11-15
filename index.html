@@ -62,25 +62,27 @@
           <p data-workout-summary aria-live="polite">
             Serie: 0 - Łączna objęctość: 0 kg
           </p>
-          <div class="form-field">
-            <label for="exercise-search">Szukaj ćwiczenia</label>
-            <input
-                    id="exercise-search"
-                    type="search"
-                    data-exercise-search
-                    placeholder="Wpisz nazwę ćwiczenia"
-            >
-            <p class="no-data-message" data-no-results role="alert" hidden>Brak pasujących serii</p>
+          <div class="sets-controls">
+            <div class="form-field">
+              <label for="exercise-search">Szukaj ćwiczenia</label>
+              <input
+                id="exercise-search"
+                type="search"
+                data-exercise-search
+                placeholder="Wpisz nazwę ćwiczenia"
+              >
+            </div>
+            <div class="form-field">
+              <label for="sets-sort">Sortuj serie</label>
+              <select id="sets-sort" data-sets-sort>
+                <option value="default">Kolejność dodania</option>
+                <option value="name">Nazwa A–Z</option>
+                <option value="weight-desc">Ciężar malejąco</option>
+                <option value="volume-desc">Objętość malejąco</option>
+              </select>
+            </div>
           </div>
-          <div class="form-field">
-            <label for="sets-sort">Sortuj serie</label>
-            <select id="sets-sort" data-sets-sort>
-              <option value="default">Kolejność dodania</option>
-              <option value="name">Nazwa A–Z</option>
-              <option value="weight-desc">Ciężar malejąco</option>
-              <option value="volume-desc">Objętość malejąco</option>
-            </select>
-          </div>
+          <p class="no-data-message" data-no-results role="alert" hidden>Brak pasujących serii</p>
           <ul class="sets-list" data-sets-list></ul>
           <template id="exercise-group-template">
             <li class="exercise-group">
