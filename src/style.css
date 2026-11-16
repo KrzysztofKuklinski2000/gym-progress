@@ -210,6 +210,23 @@ select {
   counter-reset: sets;
 }
 
+.exercise-group__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px clamp(16px, 3vw, 22px);
+  border-top: 1px solid var(--border);
+}
+
+.set-button-add {
+  color: var(--accent);
+  background: var(--surface);
+}
+
+.set-button-add:hover {
+  background: #edf3ff;
+  border-color: #8ea9df;
+}
+
 .exercise-group__sets > li:first-child {
   border-start-start-radius: 0;
   border-start-end-radius: 0;

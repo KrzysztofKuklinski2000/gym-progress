@@ -58,6 +58,7 @@ function handleFormSubmit(event) {
 function handleListClick(event) {
     const removeButton = event.target.closest('[data-remove-set]');
     const editButton = event.target.closest('[data-edit-set]');
+    const addButton = event.target.closest('[data-add-exercise-set]');
 
     if (removeButton) {
         removeSet(removeButton.dataset.removeSet);
@@ -66,8 +67,21 @@ function handleListClick(event) {
 
     if (editButton) {
         startEditingSet(editButton.dataset.editSet);
+        return;
     }
 
+    if (addButton) {
+        startAddingSet(addButton.dataset.addExerciseSet);
+    }
+}
+
+function startAddingSet(exercise) {
+    if (editingSetId !== null) {
+        resetForm();
+    }
+
+    form.elements.namedItem('name').value = exercise;
+    form.elements.namedItem('weight').focus();
 }
 
 function startEditingSet(id) {
@@ -146,6 +160,10 @@ function createExerciseGroupElement(group) {
     const nameElement = row.querySelector('[data-exercise-name]');
     const statsElement = row.querySelector('[data-exercise-stats]');
     const setsElement = row.querySelector('[data-exercise-sets]');
+    const addButton = row.querySelector('[data-add-exercise-set]');
+
+    addButton.dataset.addExerciseSet = group.exercise;
+    addButton.setAttribute('aria-label', `Dodaj serię: ${group.exercise}`);
 
     nameElement.textContent = group.exercise;
     statsElement.textContent =
